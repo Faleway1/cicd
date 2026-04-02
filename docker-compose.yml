@@ -1,0 +1,28 @@
+# Staging compose file.
+# Les images sont injectées via variables d'environnement par le job deploy:staging.
+
+services:
+  frontend:
+    image: ${FRONTEND_IMAGE}
+    container_name: microcrm-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    image: ${BACKEND_IMAGE}
+    container_name: microcrm-backend
+    ports:
+      - "4200:4200"
+    restart: unless-stopped
+
+  # Décommentez ce service si vous préférez le mode all-in-one.
+  # all_in_one:
+  #   image: ${ALL_IN_ONE_IMAGE}
+  #   container_name: microcrm-all-in-one
+  #   ports:
+  #     - "8080:80"
+  #     - "4200:4200"
+  #   restart: unless-stopped

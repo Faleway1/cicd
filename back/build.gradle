@@ -3,6 +3,8 @@ plugins {
 	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'com.adarshr.test-logger' version '4.0.0'
+	id 'jacoco'
+	id 'com.github.spotbugs' version '6.0.14'
 }
 
 group = 'com.openclassroom.devops.orion'
@@ -24,8 +26,32 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'org.hsqldb:hsqldb'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0'
 }
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+spotbugs {
+    toolVersion = '4.8.4'
+    ignoreFailures = false
+    showProgress = true
+}
+
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+    reports {
+        xml.required = true
+        html.required = true
+    }
 }
